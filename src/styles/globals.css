@@ -1,0 +1,630 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Light theme (default) */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.15 0.005 270);
+  --card: oklch(1 0 0 / 80%);
+  --card-foreground: oklch(0.15 0.005 270);
+  --popover: oklch(1 0 0 / 95%);
+  --popover-foreground: oklch(0.15 0.005 270);
+  --primary: oklch(0.55 0.2 270);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.005 270 / 80%);
+  --secondary-foreground: oklch(0.25 0.01 270);
+  --muted: oklch(0.94 0.005 270 / 60%);
+  --muted-foreground: oklch(0.35 0.01 270);
+  --accent: oklch(0.55 0.2 270 / 10%);
+  --accent-foreground: oklch(0.35 0.15 270);
+  --destructive: oklch(0.55 0.22 25);
+  --border: oklch(0 0 0 / 10%);
+  --input: oklch(0 0 0 / 8%);
+  --ring: oklch(0.55 0.2 270 / 40%);
+  --chart-1: oklch(0.55 0.2 270);
+  --chart-2: oklch(0.5 0.22 300);
+  --chart-3: oklch(0.55 0.2 200);
+  --chart-4: oklch(0.6 0.15 150);
+  --chart-5: oklch(0.5 0.2 330);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.97 0.003 270 / 90%);
+  --sidebar-foreground: oklch(0.15 0.005 270);
+  --sidebar-primary: oklch(0.55 0.2 270);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.55 0.2 270 / 10%);
+  --sidebar-accent-foreground: oklch(0.35 0.15 270);
+  --sidebar-border: oklch(0 0 0 / 8%);
+  --sidebar-ring: oklch(0.55 0.2 270 / 40%);
+}
+
+/* Dark theme — 方案C「石墨」：浅暗色，类似 GitHub Dark Dimmed */
+/* 设计理念：背景不深，整体偏中灰，对比度适中，最「不暗」的暗色模式 */
+/* 适合不喜欢太暗的用户，白天也能用的暗色模式 */
+.dark {
+  /* 背景层次：0.25 → 0.29 → 0.33，更浅的石墨灰 */
+  --background: oklch(0.25 0.006 270);
+  --foreground: oklch(0.90 0.005 270);
+  --card: oklch(0.29 0.008 270 / 75%);
+  --card-foreground: oklch(0.90 0.005 270);
+  --popover: oklch(0.33 0.010 270 / 95%);
+  --popover-foreground: oklch(0.90 0.005 270);
+  /* 主色调：中等蓝色，在浅暗底上不需要太亮 */
+  --primary: oklch(0.65 0.18 270);
+  --primary-foreground: oklch(1 0 0);
+  /* 次要色：中灰，极低色度 */
+  --secondary: oklch(0.31 0.008 270 / 70%);
+  --secondary-foreground: oklch(0.86 0.005 270);
+  /* 静音色：石墨灰 */
+  --muted: oklch(0.29 0.006 270 / 60%);
+  --muted-foreground: oklch(0.56 0.005 270);
+  /* 强调色：蓝色低透明度 */
+  --accent: oklch(0.65 0.18 270 / 12%);
+  --accent-foreground: oklch(0.80 0.10 270);
+  /* 危险色 */
+  --destructive: oklch(0.60 0.20 25);
+  /* 边框和输入框：白色低透明度，微妙分隔 */
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 8%);
+  --ring: oklch(0.65 0.18 270 / 40%);
+  /* 图表色 */
+  --chart-1: oklch(0.65 0.18 270);
+  --chart-2: oklch(0.60 0.18 300);
+  --chart-3: oklch(0.65 0.16 200);
+  --chart-4: oklch(0.68 0.14 150);
+  --chart-5: oklch(0.60 0.16 330);
+  --radius: 0.75rem;
+  /* 侧边栏：比主背景略深，形成层次 */
+  --sidebar: oklch(0.22 0.006 270 / 90%);
+  --sidebar-foreground: oklch(0.90 0.005 270);
+  --sidebar-primary: oklch(0.65 0.18 270);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.65 0.18 270 / 12%);
+  --sidebar-accent-foreground: oklch(0.80 0.10 270);
+  --sidebar-border: oklch(1 0 0 / 7%);
+  --sidebar-ring: oklch(0.65 0.18 270 / 40%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  /* 确保 html 和 body 不会被通配符的 border-color 影响 */
+  html, body {
+    border: none;
+    /* 默认不透明白色背景；Mica 效果由 JS 动态设置 background 属性覆盖 */
+  }
+  /* 暗色模式：不使用 Mica，恢复不透明背景 */
+  .dark, .dark body {
+    background: oklch(0.25 0.006 270) !important;
+  }
+  body {
+    @apply text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Glassmorphism utility classes */
+.glass {
+  background: oklch(1 0 0 / 50%);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid oklch(0 0 0 / 8%);
+  box-shadow: 0 1px 3px oklch(0 0 0 / 5%);
+}
+
+.glass-strong {
+  background: oklch(1 0 0 / 70%);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  border: 1px solid oklch(0 0 0 / 10%);
+  box-shadow: 0 2px 8px oklch(0 0 0 / 6%);
+}
+
+.glass-subtle {
+  background: oklch(1 0 0 / 35%);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid oklch(0 0 0 / 5%);
+}
+
+/* Tooltip glassmorphism */
+.tooltip-glass {
+  background: oklch(1 0 0 / 70%);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-color: oklch(0 0 0 / 10%);
+  color: oklch(0.2 0.005 270);
+}
+.tooltip-glass-arrow {
+  background: oklch(1 0 0 / 70%);
+}
+.dark .tooltip-glass {
+  background: oklch(0.29 0.008 270 / 65%);
+  border-color: oklch(1 0 0 / 10%);
+  color: oklch(0.92 0.005 270);
+}
+.dark .tooltip-glass-arrow {
+  background: oklch(0.29 0.008 270 / 65%);
+}
+
+/* Dark mode glassmorphism overrides — 石墨风格 */
+.dark .glass {
+  background: oklch(0.29 0.008 270 / 50%);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid oklch(1 0 0 / 8%);
+  box-shadow: 0 1px 4px oklch(0 0 0 / 12%);
+}
+
+.dark .glass-strong {
+  background: oklch(0.29 0.008 270 / 70%);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  border: 1px solid oklch(1 0 0 / 10%);
+  box-shadow: 0 2px 8px oklch(0 0 0 / 15%);
+}
+
+.dark .glass-subtle {
+  background: oklch(0.29 0.008 270 / 35%);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid oklch(1 0 0 / 6%);
+}
+
+/* Gradient text for headings */
+.gradient-text {
+  background: linear-gradient(135deg, oklch(0.5 0.2 270), oklch(0.45 0.22 300), oklch(0.5 0.18 200));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .gradient-text {
+  background: linear-gradient(135deg, oklch(0.72 0.16 270), oklch(0.64 0.18 300), oklch(0.70 0.14 200));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Ambient glow effects */
+.glow {
+  box-shadow:
+    0 1px 4px oklch(0.55 0.2 270 / 8%),
+    0 4px 16px oklch(0 0 0 / 8%);
+}
+
+.glow-sm {
+  box-shadow:
+    0 1px 2px oklch(0.55 0.2 270 / 6%),
+    0 2px 8px oklch(0 0 0 / 6%);
+}
+
+.dark .glow {
+  box-shadow:
+    0 0 16px oklch(0.65 0.18 270 / 8%),
+    0 8px 32px oklch(0 0 0 / 14%);
+}
+
+.dark .glow-sm {
+  box-shadow:
+    0 0 8px oklch(0.65 0.18 270 / 6%),
+    0 4px 16px oklch(0 0 0 / 10%);
+}
+
+/* Smooth background mesh gradient — 简化为单层，减少渲染负担 */
+/* Light 模式下不需要渐变，由布局层的灰白分区提供视觉层次 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: none;
+  pointer-events: none;
+}
+
+/* 石墨：Mica 模式下不需要额外的氛围光 */
+.dark body::before {
+  background: none;
+}
+
+/* ===== 页面过渡动画 ===== */
+@keyframes page-fade-in {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-transition {
+  animation: page-fade-in 120ms ease-out both;
+}
+
+/* 模式切换期间禁用页面入场动画，避免与整体 opacity+transform 过渡叠加造成闪烁 */
+.mode-switching .page-transition {
+  animation: none;
+}
+
+/* 尊重用户减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    animation-duration: 0ms;
+  }
+  /* 模式切换遮罩也不做动画 */
+  #mode-switch-overlay {
+    transition-duration: 0ms !important;
+  }
+}
+
+/* ===== 窗口 resize 期间禁用所有 transition，防止无边框窗口拖拽调整大小时元素抖动/残影 ===== */
+.is-resizing *,
+.is-resizing *::before,
+.is-resizing *::after {
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+}
+
+/* ===== 模式切换期间全局隐藏滚动条，防止 resize 时旧内容撑出滚动条闪烁 ===== */
+.mode-switching,
+.mode-switching body,
+.mode-switching * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.mode-switching ::-webkit-scrollbar,
+.mode-switching *::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* ===== 亮色模式自定义滚动条 ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ===== 暗色模式滚动条（仅对实际可滚动容器生效，不用通配符避免所有元素都显示滚动条） ===== */
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+.dark ::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ===== Debug 面板自定义滚动条 ===== */
+.debug-panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+.debug-panel * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+.debug-panel ::-webkit-scrollbar,
+.debug-panel *::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.debug-panel ::-webkit-scrollbar-track,
+.debug-panel *::-webkit-scrollbar-track {
+  background: transparent;
+}
+.debug-panel ::-webkit-scrollbar-thumb,
+.debug-panel *::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+.debug-panel ::-webkit-scrollbar-thumb:hover,
+.debug-panel *::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+.debug-panel ::-webkit-scrollbar-corner,
+.debug-panel *::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ===== 骨架屏 Shimmer 动画 ===== */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    oklch(0 0 0 / 3%) 25%,
+    oklch(0 0 0 / 6%) 50%,
+    oklch(0 0 0 / 3%) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+}
+
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    oklch(1 0 0 / 3%) 25%,
+    oklch(1 0 0 / 6%) 50%,
+    oklch(1 0 0 / 3%) 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* ===== Markdown 渲染样式 ===== */
+.markdown-body {
+  line-height: 1.7;
+  word-wrap: break-word;
+  color: oklch(0.35 0.005 270 / 90%);
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  color: oklch(0.38 0.005 270);
+}
+
+.markdown-body h1 { font-size: 1.4em; }
+.markdown-body h2 { font-size: 1.2em; }
+.markdown-body h3 { font-size: 1.1em; }
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 { font-size: 1em; }
+
+.markdown-body h1:first-child,
+.markdown-body h2:first-child,
+.markdown-body h3:first-child {
+  margin-top: 0;
+}
+
+.markdown-body p {
+  margin: 0.6em 0;
+}
+
+.markdown-body p:first-child {
+  margin-top: 0;
+}
+
+.markdown-body p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+.markdown-body li {
+  margin: 0.25em 0;
+}
+
+.markdown-body li > ul,
+.markdown-body li > ol {
+  margin: 0.15em 0;
+}
+
+.markdown-body code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  background: oklch(0 0 0 / 5%);
+  color: oklch(0.4 0.15 270);
+}
+
+.markdown-body pre {
+  margin: 0.8em 0;
+  padding: 0.8em 1em;
+  border-radius: 8px;
+  background: oklch(0 0 0 / 4%);
+  overflow-x: auto;
+}
+
+.markdown-body pre code {
+  padding: 0;
+  background: none;
+  color: inherit;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+.markdown-body blockquote {
+  margin: 0.6em 0;
+  padding: 0.4em 0.8em;
+  border-left: 3px solid oklch(0.55 0.2 270 / 30%);
+  color: oklch(0.35 0.01 270);
+  background: oklch(0 0 0 / 2%);
+  border-radius: 0 6px 6px 0;
+}
+
+.markdown-body blockquote p {
+  margin: 0.2em 0;
+}
+
+.markdown-body hr {
+  border: none;
+  border-top: 1px solid oklch(0 0 0 / 10%);
+  margin: 1em 0;
+}
+
+.markdown-body strong {
+  font-weight: 600;
+  color: oklch(0.38 0.005 270);
+}
+
+.markdown-body a {
+  color: oklch(0.55 0.2 270);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.8em 0;
+  font-size: 0.9em;
+}
+
+.markdown-body th,
+.markdown-body td {
+  padding: 0.4em 0.8em;
+  border: 1px solid oklch(0 0 0 / 10%);
+  text-align: left;
+}
+
+.markdown-body th {
+  background: oklch(0 0 0 / 3%);
+  font-weight: 600;
+}
+
+/* Markdown 暗色主题 */
+.dark .markdown-body {
+  color: oklch(0.96 0 0 / 85%);
+}
+
+.dark .markdown-body h1,
+.dark .markdown-body h2,
+.dark .markdown-body h3,
+.dark .markdown-body h4,
+.dark .markdown-body h5,
+.dark .markdown-body h6 {
+  color: oklch(0.96 0 0);
+}
+
+.dark .markdown-body strong {
+  color: oklch(0.96 0 0);
+}
+
+.dark .markdown-body code {
+  background: oklch(1 0 0 / 7%);
+  color: oklch(0.72 0.14 270);
+}
+
+.dark .markdown-body pre {
+  background: oklch(1 0 0 / 4%);
+}
+
+.dark .markdown-body blockquote {
+  border-left-color: oklch(0.65 0.18 270 / 28%);
+  color: oklch(0.64 0.005 270);
+  background: oklch(1 0 0 / 3%);
+}
+
+.dark .markdown-body hr {
+  border-top-color: oklch(1 0 0 / 7%);
+}
+
+.dark .markdown-body a {
+  color: oklch(0.65 0.18 270);
+}
+
+.dark .markdown-body th,
+.dark .markdown-body td {
+  border-color: oklch(1 0 0 / 7%);
+}
+
+.dark .markdown-body th {
+  background: oklch(1 0 0 / 3%);
+}
+
+/* Mini 端 Markdown 尺寸缩小 */
+.markdown-body-mini {
+  font-size: 0.8125rem;
+}
+
+.markdown-body-mini h1 { font-size: 1.15em; }
+.markdown-body-mini h2 { font-size: 1.05em; }
+.markdown-body-mini h3 { font-size: 1em; }
+
+/* Full 端 Markdown 尺寸 */
+.markdown-body-full {
+  font-size: 0.875rem;
+}
+
+
