@@ -6,8 +6,14 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { toast } from "sonner";
 import * as api from "@/lib/tauri-api";
 import { getCurrentAiProviderConfig } from "@/lib/settings-reader";
+
+/** 是否运行在 Tauri 桌面环境中（纯 Web 调试模式下为 false） */
+function runningInTauri(): boolean {
+  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+}
 
 interface ApiKeyContextValue {
   /** 当前 API Key（仅用于向后兼容，设置后立即存入 Rust 端） */
@@ -87,13 +93,19 @@ export function ApiKeyProvider({ children }: { children: ReactNode }) {
           // 已迁移，清理旧数据
           localStorage.removeItem(LEGACY_KEY);
         }
-      } catch {
-        // Tauri API 不可用时（纯 Web 模式），降级到 localStorage
-        const LEGACY_KEY = "promptpilot_gemini_api_key";
-        const stored = localStorage.getItem(LEGACY_KEY);
-        if (stored) {
-          setApiKeyState(stored);
-          setIsConfigured(true);
+      } catch (err) {
+        if (runningInTauri()) {
+          // 桌面端 IPC 失败：不得把明文 Key 降级读入 localStorage，仅记录错误。
+          // 初始化完成后会因未配置弹出设置窗口，用户可重试。
+          console.error("[ApiKeyProvider] 初始化 API Key 状态失败:", err);
+        } else {
+          // 纯 Web 调试模式：降级到 localStorage
+          const LEGACY_KEY = "promptpilot_gemini_api_key";
+          const stored = localStorage.getItem(LEGACY_KEY);
+          if (stored) {
+            setApiKeyState(stored);
+            setIsConfigured(true);
+          }
         }
       }
       setInitialized(true);
@@ -129,8 +141,14 @@ export function ApiKeyProvider({ children }: { children: ReactNode }) {
         setApiKeyState("");
         setIsConfigured(false);
       }
-    } catch {
-      // 降级到 localStorage
+    } catch (err) {
+      if (runningInTauri()) {
+        // 桌面端保存失败：不降级为 localStorage 明文存储，报错并保持原状态
+        console.error("[ApiKeyProvider] 保存 API Key 失败:", err);
+        toast.error("API Key 保存失败，请重试（未做任何更改）");
+        return;
+      }
+      // 纯 Web 调试模式：降级到 localStorage
       const LEGACY_KEY = "promptpilot_gemini_api_key";
       if (key) {
         localStorage.setItem(LEGACY_KEY, key);

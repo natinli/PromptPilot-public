@@ -245,7 +245,7 @@ export function DataManagement() {
         <div className="rounded-lg bg-muted/50 px-4 py-3">
           <p className="text-xs text-foreground/50 leading-relaxed">
             <strong className="text-foreground/65">提示：</strong>
-            导出文件包含所有未归档的提示词及其分类信息。导入时会自动跳过已存在的数据，不会产生重复。
+            导出文件包含全部提示词（含已归档）及其分类信息。导入时会自动跳过已存在的数据，不会产生重复。
           </p>
         </div>
       </div>

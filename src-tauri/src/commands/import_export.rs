@@ -42,6 +42,9 @@ pub struct ExportPrompt {
     pub optimized_by_model: Option<String>,
     pub category_id: Option<String>,
     pub is_favorite: bool,
+    /// 是否已归档（旧导出文件无此字段，反序列化时默认 false）
+    #[serde(default)]
+    pub is_archived: bool,
     pub source_type: String,
     pub usage_count: i32,
     pub optimize_count: i32,
@@ -60,18 +63,31 @@ pub fn cmd_export_prompts(conn: &Connection) -> AppResult<String> {
         })
         .collect::<Vec<_>>();
 
-    let query = ListPromptsQuery {
-        page: 1,
-        page_size: 10000,
-        search: None,
-        category_id: None,
-        is_favorite: None,
-        is_archived: Some(false),
-        sort: None,
-    };
-    let result = queries::list_prompts(conn, &query)?;
+    // 导出全部提示词（含已归档）：分页拉取直到取满总数，避免单页上限截断造成备份丢数据
+    const EXPORT_PAGE_SIZE: u32 = 1000;
+    let mut all_prompts: Vec<Prompt> = Vec::new();
+    let mut page: u32 = 1;
+    loop {
+        let query = ListPromptsQuery {
+            page,
+            page_size: EXPORT_PAGE_SIZE,
+            search: None,
+            category_id: None,
+            is_favorite: None,
+            is_archived: None,
+            sort: None,
+        };
+        let result = queries::list_prompts(conn, &query)?;
+        let total = result.total;
+        let fetched = result.items.len();
+        all_prompts.extend(result.items);
+        if fetched == 0 || (all_prompts.len() as i64) >= total {
+            break;
+        }
+        page += 1;
+    }
 
-    let prompts = result.items.into_iter().map(|p| ExportPrompt {
+    let prompts = all_prompts.into_iter().map(|p| ExportPrompt {
         id: p.id,
         title: p.title,
         content: p.content,
@@ -79,6 +95,7 @@ pub fn cmd_export_prompts(conn: &Connection) -> AppResult<String> {
         optimized_by_model: p.optimized_by_model,
         category_id: p.category_id,
         is_favorite: p.is_favorite,
+        is_archived: p.is_archived,
         source_type: p.source_type,
         usage_count: p.usage_count,
         optimize_count: p.optimize_count,
@@ -146,12 +163,12 @@ pub fn cmd_import_prompts(conn: &Connection, json_str: &str) -> AppResult<Import
 
         tx.execute(
             "INSERT INTO prompts (id, title, content, raw_requirement, optimized_by_model, category_id, is_favorite, is_archived, source_type, usage_count, optimize_count, created_at, updated_at)
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, 0, ?8, ?9, ?10, ?11, ?12)",
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
             params![
                 prompt.id, prompt.title, prompt.content, prompt.raw_requirement,
                 prompt.optimized_by_model, prompt.category_id, prompt.is_favorite,
-                prompt.source_type, prompt.usage_count, prompt.optimize_count,
-                prompt.created_at, prompt.updated_at,
+                prompt.is_archived, prompt.source_type, prompt.usage_count,
+                prompt.optimize_count, prompt.created_at, prompt.updated_at,
             ],
         )?;
         imported_prompts += 1;
